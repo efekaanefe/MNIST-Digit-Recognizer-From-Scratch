@@ -25,8 +25,8 @@ class MyNeuralNetwork:
 
         iterations = train_X_flatten.T.shape[0] // batch_size
 
-        accuracy_values = []
-        epoch_values = []
+        self.accuracy_values = []
+        self.epoch_values = []
 
         for epoch in range(epochs):
             for iteration in range(iXterations):
@@ -46,13 +46,12 @@ class MyNeuralNetwork:
                     prediction, accuracy = print_accuracy(
                         A2, self.data.train_y.T[index0:index1]
                     )
-                    accuracy_values.append(accuracy)
-                    epoch_values.append(epoch)
+                    self.accuracy_values.append(accuracy)
+                    self.epoch_values.append(epoch)
 
         if plot_acc:
-            plot_accuracy(
-                accuracy_values, epoch_values, batch_size, learning_rate, iterations
-            )
+            title = f"accuracy vs epoch = {epoch}, batch_size = {batch_size}, learning_rate = {learning_rate}, iterations = {iterations}"
+            plot_accuracy(self.accuracy_values, self.epoch_values, title)
 
     def print_accuracy(self, A2, y):
         print("Epoch:", epoch + 1)
@@ -64,14 +63,9 @@ class MyNeuralNetwork:
         print(accuracy)
         return predictions, accuracy
 
-    def plot_accuracy(
-        self, accuracy_values, epoch_values, batch_size, learning_rate, iterations
-    ):
+    def plot_accuracy(self, accuracy_values, epoch_values, title):
         fig = plt.figure(1)  # identifies the figure
-        plt.title(
-            f"accuracy vs epoch = {epoch}, batch_size = {batch_size}, learning_rate = {learning_rate}, iterations = {iterations}",
-            fontsize="16",
-        )  # title
+        plt.title(title, fontsize="16")  # title
         plt.plot(epoch_values, accuracy_values)  # plot the points
         plt.xlabel("epoch", fontsize="13")  # adds a label in the x axis
         plt.ylabel("accuracy", fontsize="13")  # adds a label in the y axis
@@ -115,6 +109,34 @@ class MyNeuralNetwork:
         if print_predictions:
             print(predictions, Y)
         return np.sum(predictions == Y) / Y.size
+
+    def plot_and_label_X(i):
+        print("Label:", self.data.train_y[i])
+        print("Y onehot:", self.data.train_y_onehot.T[i])
+        plt.gray()
+        plt.matshow(self.data.train_X[i])
+        plt.show()
+
+    def test_accuracy_with_test_data(self):
+        X = self.data.test_X_flatten
+        y = self.data.test_y
+
+        Z1, A1, Z2, A2 = self.forward_propagation(X)
+
+        accuracy = self.get_accuracy(get_predictions(A2), y)
+        print(f"Test data accuracy: {accuracy}")
+
+    def test_with_random_data(self):
+        index = np.random.randint(0, 1000)
+
+        X = self.data.train_X_flatten.T[index : index + 1].T
+        # y = self.data.train_y_onehot.T[index : index + 1].T
+
+        Z1, A1, Z2, A2 = self.forward_propagation(X)
+        print(
+            f"I am % {np.around(np.max(A2)*100, 2)} certain that it is: ", np.argmax(A2)
+        )
+        plot_and_label_train_X(index)
 
 
 class ActivationFunctions:
