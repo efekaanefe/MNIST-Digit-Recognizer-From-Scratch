@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# TODO: implementing multiple hidden layers, hidden -> [1st layer size, 2nd, 3rd, etc.]
 class MyNeuralNetwork:
     def __init__(self, dataInitializer, input=784, hidden=10, output=10):
         self.data = dataInitializer
@@ -29,7 +29,7 @@ class MyNeuralNetwork:
         self.epoch_values = []
 
         for epoch in range(epochs):
-            for iteration in range(iXterations):
+            for iteration in range(iterations):
 
                 # parsing the data
                 index0 = iteration * batch_size
@@ -39,42 +39,23 @@ class MyNeuralNetwork:
                 Y = train_y_onehot.T[index0:index1].T
 
                 Z1, A1, Z2, A2 = self.forward_propagation(X)
-                dW1, db1, dW2, db2 = self.backward_propagation(X, Y, Z1, A1, Z2, A2)
+                dW1, db1, dW2, db2 = self.backward_propagation(
+                    X, Y, Z1, A1, Z2, A2, batch_size
+                )
                 self.update_parameters(learning_rate, dW1, db1, dW2, db2)
 
                 if print_acc:
-                    prediction, accuracy = print_accuracy(
-                        A2, self.data.train_y.T[index0:index1]
+                    prediction, accuracy = self.print_accuracy(
+                        A2, self.data.train_y.T[index0:index1], epoch, index0, index1
                     )
                     self.accuracy_values.append(accuracy)
                     self.epoch_values.append(epoch)
 
         if plot_acc:
-            title = f"accuracy vs epoch = {epoch}, batch_size = {batch_size}, learning_rate = {learning_rate}, iterations = {iterations}"
-            plot_accuracy(self.accuracy_values, self.epoch_values, title)
+            title = f"accuracy vs epoch = {epochs}, batch_size = {batch_size}, learning_rate = {learning_rate}, iterations = {iterations}"
+            self.plot_accuracy(self.accuracy_values, self.epoch_values, title)
 
-    def print_accuracy(self, A2, y):
-        print("Epoch:", epoch + 1)
-        predictions = get_predictions(A2)
-        accuracy = get_accuracy(
-            predictions,
-            train_y.T[(iteration * batch_size) : (iteration + 1) * batch_size].T,
-        )
-        print(accuracy)
-        return predictions, accuracy
-
-    def plot_accuracy(self, accuracy_values, epoch_values, title):
-        fig = plt.figure(1)  # identifies the figure
-        plt.title(title, fontsize="16")  # title
-        plt.plot(epoch_values, accuracy_values)  # plot the points
-        plt.xlabel("epoch", fontsize="13")  # adds a label in the x axis
-        plt.ylabel("accuracy", fontsize="13")  # adds a label in the y axis
-        # plt.savefig(f"epoch_{epoch} batch_size_{batch_size}.png")	#saves the figure in the present directory
-
-        plt.grid()  # shows a grid under the plot
-        plt.show()
-
-    def initialize():
+    def initialize(self):
         self.W1 = np.random.uniform(-0.5, 0.5, (self.hidden, self.input))
         self.b1 = np.random.uniform(-0.5, 0.5, (self.hidden, 1))
         self.W2 = np.random.uniform(-0.5, 0.5, (self.output, self.hidden))
@@ -87,11 +68,12 @@ class MyNeuralNetwork:
         A2 = self.activations.softmax(Z2)
         return Z1, A1, Z2, A2
 
-    def backward_propagation(self, X, Y, Z1, A1, Z2, A2):
+    def backward_propagation(self, X, Y, Z1, A1, Z2, A2, batch_size):
+        m = batch_size
         dZ2 = A2 - Y
         dW2 = 1 / m * dZ2 @ A1.T
         db2 = 1 / m * np.sum(dZ2)
-        dZ1 = W2.T @ dZ2 * self.activations.ReLU_deriv(Z1)
+        dZ1 = self.W2.T @ dZ2 * self.activations.ReLU_deriv(Z1)
         dW1 = 1 / m * dZ1 @ X.T
         db1 = 1 / m * np.sum(dZ1)
         return dW1, db1, dW2, db2
@@ -138,20 +120,41 @@ class MyNeuralNetwork:
         )
         plot_and_label_train_X(index)
 
+    def print_accuracy(self, A2, y, epoch, index0, index1):
+        print("Epoch:", epoch + 1)
+        predictions = self.get_predictions(A2)
+        accuracy = self.get_accuracy(
+            predictions,
+            y.T[index0:index1].T,
+        )
+        print(accuracy)
+        return predictions, accuracy
+
+    def plot_accuracy(self, accuracy_values, epoch_values, title):
+        fig = plt.figure(1)  # identifies the figure
+        plt.title(title, fontsize="16")  # title
+        plt.plot(epoch_values, accuracy_values)  # plot the points
+        plt.xlabel("epoch", fontsize="13")  # adds a label in the x axis
+        plt.ylabel("accuracy", fontsize="13")  # adds a label in the y axis
+        # plt.savefig(f"epoch_{epoch} batch_size_{batch_size}.png")	#saves the figure in the present directory
+
+        plt.grid()  # shows a grid under the plot
+        plt.show()
+
 
 class ActivationFunctions:
-    def sigmoid(x):
+    def sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
 
-    def sigmoid_deriv(x):
+    def sigmoid_deriv(self, x):
         return sigmoid(x) * (1 - sigmoid(x))
 
-    def ReLU(Z):
+    def ReLU(self, Z):
         return np.maximum(Z, 0)
 
-    def ReLU_deriv(Z):
+    def ReLU_deriv(self, Z):
         return Z > 0
 
-    def softmax(Z):
+    def softmax(self, Z):
         A = np.exp(Z) / sum(np.exp(Z))
         return A
