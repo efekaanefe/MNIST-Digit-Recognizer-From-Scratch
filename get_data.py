@@ -13,8 +13,8 @@ class DataInitializerMNIST:
         (self.train_X, self.train_y), (self.test_X, self.test_y) = mnist.load_data()
 
     def normalize_X(self):
-        self.train_X / 255
-        self.test_X / 255
+        self.train_X = self.train_X / 255
+        self.test_X = self.test_X / 255
 
     def get_y_one_hot_data(self):
         self.train_y_onehot = self.get_one_hot_y(self.train_y)  # shape -> (10,60000)

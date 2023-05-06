@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # TODO: implementing multiple hidden layers, hidden -> [1st layer size, 2nd, 3rd, etc.]
+# TODO: create ipynb file to debug why does the class structure isn't training properly
 class MyNeuralNetwork:
     def __init__(self, dataInitializer, input=784, hidden=10, output=10):
         self.data = dataInitializer
@@ -14,9 +15,9 @@ class MyNeuralNetwork:
 
     def gradient_descent(
         self,
-        epochs=100,
-        learning_rate=0.1,
-        batch_size=20000,
+        epochs=50,
+        learning_rate=0.6,
+        batch_size=60000,
         print_acc=True,
         plot_acc=True,
     ):
@@ -46,7 +47,7 @@ class MyNeuralNetwork:
 
                 if print_acc:
                     prediction, accuracy = self.print_accuracy(
-                        A2, self.data.train_y.T[index0:index1], epoch, index0, index1
+                        A2, self.data.train_y.T[index0:index1].T, epoch, index0, index1
                     )
                     self.accuracy_values.append(accuracy)
                     self.epoch_values.append(epoch)
@@ -92,7 +93,7 @@ class MyNeuralNetwork:
             print(predictions, Y)
         return np.sum(predictions == Y) / Y.size
 
-    def plot_and_label_X(i):
+    def plot_and_label_X(self, i):
         print("Label:", self.data.train_y[i])
         print("Y onehot:", self.data.train_y_onehot.T[i])
         plt.gray()
@@ -105,7 +106,7 @@ class MyNeuralNetwork:
 
         Z1, A1, Z2, A2 = self.forward_propagation(X)
 
-        accuracy = self.get_accuracy(get_predictions(A2), y)
+        accuracy = self.get_accuracy(self.get_predictions(A2), y)
         print(f"Test data accuracy: {accuracy}")
 
     def test_with_random_data(self):
@@ -120,13 +121,10 @@ class MyNeuralNetwork:
         )
         plot_and_label_train_X(index)
 
-    def print_accuracy(self, A2, y, epoch, index0, index1):
+    def print_accuracy(self, A2, Y, epoch, index0, index1):
         print("Epoch:", epoch + 1)
         predictions = self.get_predictions(A2)
-        accuracy = self.get_accuracy(
-            predictions,
-            y.T[index0:index1].T,
-        )
+        accuracy = self.get_accuracy(predictions, Y)
         print(accuracy)
         return predictions, accuracy
 

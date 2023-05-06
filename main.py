@@ -6,3 +6,4 @@ from nn import MyNeuralNetwork
 data = DataInitializerMNIST()
 nn = MyNeuralNetwork(data)
 nn.gradient_descent()
+nn.test_accuracy_with_test_data()
