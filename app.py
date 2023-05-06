@@ -102,12 +102,21 @@ class DigitRecognizerGUI:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            # if pygame.mouse.get_pressed()[0]:
-            #     # Update matrix when mouse is clicked
-            #     mouse_pos = pygame.mouse.get_pos()
-            #     col = mouse_pos[0] // CELL_SIZE
-            #     row = mouse_pos[1] // CELL_SIZE
-            #     self.matrix[row][col] = 1
+            if pygame.mouse.get_pressed()[0]:
+                # Update matrix when mouse is clicked
+                x, y = pygame.mouse.get_pos()
+                is_colliding_x = (
+                    MATRIX_ORIGIN_X < x and x < MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH
+                )
+                is_colliding_y = (
+                    MATRIX_ORIGIN_Y < y and y < MATRIX_ORIGIN_Y + MATRIX_AREA_HEIGHT
+                )
+                is_colliding = is_colliding_x and is_colliding_y
+                if is_colliding:
+                    col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
+                    row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
+                    self.matrix[row][col] = 1
+                    print("is colliding")
 
     def get_prediction(self):
         pass
