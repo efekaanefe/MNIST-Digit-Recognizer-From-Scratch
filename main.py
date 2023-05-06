@@ -5,3 +5,4 @@ from nn import MyNeuralNetwork
 
 data = DataInitializerMNIST()
 nn = MyNeuralNetwork(data)
+

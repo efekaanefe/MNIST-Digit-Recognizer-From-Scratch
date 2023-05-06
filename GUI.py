@@ -1,7 +1,7 @@
 import pygame
 
 # Define constants
-CELL_SIZE = 25
+CELL_SIZE = 20
 GRID_SIZE = (28, 28)
 WINDOW_SIZE = (CELL_SIZE * GRID_SIZE[0], CELL_SIZE * GRID_SIZE[1])
 BLACK = (0, 0, 0)
