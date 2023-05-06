@@ -45,7 +45,7 @@ class MyNeuralNetwork:
                 )
                 self.update_parameters(learning_rate, dW1, db1, dW2, db2)
 
-                if print_acc:
+                if print_acc and epoch % 10 == 0 and iteration = iterations-1:
                     prediction, accuracy = self.print_accuracy(
                         A2, self.data.train_y.T[index0:index1].T, epoch, index0, index1
                     )
@@ -122,7 +122,7 @@ class MyNeuralNetwork:
         plot_and_label_train_X(index)
 
     def print_accuracy(self, A2, Y, epoch, index0, index1):
-        print("Epoch:", epoch + 1)
+        print("Epoch:", epoch)
         predictions = self.get_predictions(A2)
         accuracy = self.get_accuracy(predictions, Y)
         print(accuracy)
