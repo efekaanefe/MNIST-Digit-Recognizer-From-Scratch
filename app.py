@@ -33,7 +33,7 @@ WHITE = (200, 200, 200)
 GRAY = (100, 100, 100)
 BLUE = (0, 0, 220)
 RED = (220, 0, 0)
-
+GREEN = (0,220,0)
 states = ["untrained", "training", "predictions"]
 
 
@@ -41,7 +41,7 @@ class DigitRecognizerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
-            epochs=100, learning_rate=0.5, batch_size=60000 // 3, plot_acc=False
+            epochs=10, learning_rate=0.5, batch_size=60000 // 3, plot_acc=False
         )
 
         self.init_window()
@@ -137,7 +137,6 @@ class DigitRecognizerGUI:
                     col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
                     row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
                     self.matrix[row][col] = 1
-                self.draw_predictions()
 
             # clear cell
             if pygame.mouse.get_pressed()[2]:
@@ -154,7 +153,6 @@ class DigitRecognizerGUI:
                     col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
                     row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
                     self.matrix[row][col] = 0
-                self.draw_predictions()
 
     def get_prediction(self):
         input = np.array(self.matrix).flatten()
@@ -167,21 +165,20 @@ class DigitRecognizerGUI:
         input = np.array(self.matrix).flatten().reshape(784, 1)
 
         Z1, A1, Z2, A2 = self.nn.forward_propagation(input)
-        # print(np.argmax(A2))
-
-        print(
-            f"I am % {np.around(np.max(A2)*100, 2)} certain that it is: ", np.argmax(A2)
-        )
         return A2
 
     def draw_predictions(self):
         prediction_array = self.get_prediction()  # A2
 
+        # print(
+        #     f"I am % {np.around(np.max(prediction_array)*100, 2)} certain that it is: ", np.argmax(A2)
+        # )
+
         # draw main guess
         size_w = 100
         size_h = 50
         x_guess = (
-            PREDICTION_ORIGIN_X + PREDICTON_AREA_WIDTH // 2 - size_w // 2 + 2 * X_OFFSET
+            PREDICTION_ORIGIN_X + PREDICTON_AREA_WIDTH // 2 - size_w // 2 + 3 * X_OFFSET
         )
         y_guess = PREDICTION_ORIGIN_Y + PREDICTON_AREA_HEIGHT // 2 - size_h // 2
         pygame.draw.rect(self.screen, WHITE, (x_guess, y_guess, size_w, size_h))
@@ -190,6 +187,9 @@ class DigitRecognizerGUI:
         )
         text_rect = text.get_rect(center=(x_guess + size_w // 2, y_guess + size_h // 2))
         self.screen.blit(text, text_rect)
+
+        x1_synapses = x_guess
+        y1_synapses = y_guess+size_h//2
 
         for i, pred in enumerate(prediction_array):
             # draw prediction array
@@ -203,12 +203,16 @@ class DigitRecognizerGUI:
             text_color = RED if i == np.argmax(prediction_array) else GRAY
             # Draw the predicted value as text
             text = self.font.render(
-                "{:.2f}".format(100 * float(prediction_array[i])), True, text_color
+                "{:.2f}".format(100 * float(pred)), True, text_color
             )
             text_rect = text.get_rect(center=(x + size // 2, y + size // 2))
             self.screen.blit(text, text_rect)
 
             # draw synapses
+            color = (0,pred*255,0)
+            x0_synapses = x+(size-2) 
+            y0_synapses = y+(size-2)//2
+            pygame.draw.line(self.screen, color, (x0_synapses, y0_synapses), (x1_synapses, y1_synapses))
 
 
 app = DigitRecognizerGUI()
