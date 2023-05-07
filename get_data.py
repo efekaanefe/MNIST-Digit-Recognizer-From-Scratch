@@ -37,3 +37,6 @@ class DataInitializerMNIST:
         for i in range(X.shape[0]):
             output.append(X[i].flatten())
         return np.array(output).T
+
+    def data_augmentation(self):
+        pass
