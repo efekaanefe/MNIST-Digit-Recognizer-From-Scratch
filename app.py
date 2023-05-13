@@ -29,6 +29,8 @@ BUTTON_ORIGIN_X, BUTTON_ORIGIN_Y = (
 )
 
 BLACK = (32, 32, 32)
+
+
 WHITE = (200, 200, 200)
 GRAY = (100, 100, 100)
 BLUE = (0, 0, 220)
@@ -60,6 +62,7 @@ class DigitRecognizerGUI:
 
     def init_matrix(self):
         self.matrix = [[0 for j in range(GRID_SIZE[1])] for i in range(GRID_SIZE[0])]
+        self.matrix = np.zeros(GRID_SIZE)
 
     def init_neural_network(self):
         self.nn = MyNeuralNetwork(DataInitializerMNIST())
@@ -68,10 +71,13 @@ class DigitRecognizerGUI:
         # Draw cells
         for i in range(GRID_SIZE[0]):
             for j in range(GRID_SIZE[1]):
-                if self.matrix[i][j] == 1:
-                    color = BLACK
-                else:
-                    color = WHITE
+                val = self.matrix[i][j]
+                color = (255 * (1 - val), 255 * (1 - val), 255 * (1 - val))
+
+                # if self.matrix[i][j] == 1:
+                #     color = BLACK
+                # else:
+                #     color = WHITE
                 pygame.draw.rect(
                     self.screen,
                     color,
@@ -83,6 +89,19 @@ class DigitRecognizerGUI:
                     ),
                 )
         self.draw_lines()
+
+    def draw_with_gaussian(self, x, y, sigma=0.8, amplitude=1):
+        for i in range(GRID_SIZE[0]):
+            for j in range(GRID_SIZE[1]):
+                dist = np.sqrt((x - i) ** 2 + (y - j) ** 2)
+                # calculate the modification factor using the Gaussian formula
+                factor = np.exp(-(dist**2) / (2 * sigma**2)) * amplitude
+                # apply the modification factor to the pixel value
+                self.matrix[i, j] += factor
+                # keep the pixel value between 0 and 1
+                self.matrix[i, j] = np.clip(self.matrix[i, j], 0, 1)
+        print("drawn")
+        print(self.matrix)
 
     def draw_lines(self):
         # vertical
@@ -127,17 +146,21 @@ class DigitRecognizerGUI:
             if pygame.mouse.get_pressed()[0]:
                 # Update matrix when mouse is clicked
                 x, y = pygame.mouse.get_pos()
-                is_colliding_x = (
-                    MATRIX_ORIGIN_X < x and x < MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH
-                )
-                is_colliding_y = (
-                    MATRIX_ORIGIN_Y < y and y < MATRIX_ORIGIN_Y + MATRIX_AREA_HEIGHT
-                )
-                is_colliding = is_colliding_x and is_colliding_y
-                if is_colliding:
-                    col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
-                    row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
-                    self.matrix[row][col] = 1
+                col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
+                row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
+
+                self.draw_with_gaussian(row, col)
+                # is_colliding_x = (
+                #     MATRIX_ORIGIN_X < x and x < MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH
+                # )
+                # is_colliding_y = (
+                #     MATRIX_ORIGIN_Y < y and y < MATRIX_ORIGIN_Y + MATRIX_AREA_HEIGHT
+                # )
+                # is_colliding = is_colliding_x and is_colliding_y
+                # if is_colliding:
+                #     col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
+                #     row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
+                #     self.matrix[row][col] = 1
 
             # clear cell
             if pygame.mouse.get_pressed()[2]:

@@ -18,7 +18,7 @@ class MyNeuralNetwork:
         self,
         epochs=50,
         learning_rate=0.6,
-        batch_size=60000,
+        batch_size=60000 * 2,
         print_acc=True,
         plot_acc=True,
     ):
