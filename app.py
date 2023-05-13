@@ -33,7 +33,7 @@ WHITE = (200, 200, 200)
 GRAY = (100, 100, 100)
 BLUE = (0, 0, 220)
 RED = (220, 0, 0)
-GREEN = (0,220,0)
+GREEN = (0, 220, 0)
 states = ["untrained", "training", "predictions"]
 
 
@@ -41,8 +41,9 @@ class DigitRecognizerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
-            epochs=10, learning_rate=0.5, batch_size=60000 // 3, plot_acc=False
+            epochs=100, learning_rate=0.5, batch_size=(60000 * 2) // 3, plot_acc=False
         )
+        self.nn.test_accuracy_with_test_data()
 
         self.init_window()
         self.init_matrix()
@@ -189,7 +190,7 @@ class DigitRecognizerGUI:
         self.screen.blit(text, text_rect)
 
         x1_synapses = x_guess
-        y1_synapses = y_guess+size_h//2
+        y1_synapses = y_guess + size_h // 2
 
         for i, pred in enumerate(prediction_array):
             # draw prediction array
@@ -209,10 +210,15 @@ class DigitRecognizerGUI:
             self.screen.blit(text, text_rect)
 
             # draw synapses
-            color = (0,pred*255,0)
-            x0_synapses = x+(size-2) 
-            y0_synapses = y+(size-2)//2
-            pygame.draw.line(self.screen, color, (x0_synapses, y0_synapses), (x1_synapses, y1_synapses))
+            color = (0, pred * 255, 0)
+            x0_synapses = x + (size - 2)
+            y0_synapses = y + (size - 2) // 2
+            pygame.draw.line(
+                self.screen,
+                color,
+                (x0_synapses, y0_synapses),
+                (x1_synapses, y1_synapses),
+            )
 
 
 app = DigitRecognizerGUI()

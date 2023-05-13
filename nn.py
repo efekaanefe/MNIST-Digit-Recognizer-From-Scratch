@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # TODO: implementing multiple hidden layers, hidden -> [1st layer size, 2nd, 3rd, etc.]
 # TODO: create ipynb file to debug why does the class structure isn't training properly
 class MyNeuralNetwork:
@@ -31,7 +32,6 @@ class MyNeuralNetwork:
 
         for epoch in range(epochs):
             for iteration in range(iterations):
-
                 # parsing the data
                 index0 = iteration * batch_size
                 index1 = (iteration + 1) * batch_size

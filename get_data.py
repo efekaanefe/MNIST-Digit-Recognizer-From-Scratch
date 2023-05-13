@@ -1,10 +1,12 @@
 from keras.datasets import mnist
 import numpy as np
+from keras.preprocessing.image import ImageDataGenerator
 
 
 class DataInitializerMNIST:
     def __init__(self):
         self.load_mnist_data()
+        self.add_augmented_data()
         self.normalize_X()
         self.get_X_flatten_data()
         self.get_y_one_hot_data()
@@ -38,5 +40,20 @@ class DataInitializerMNIST:
             output.append(X[i].flatten())
         return np.array(output).T
 
-    def data_augmentation(self):
-        pass
+    def add_augmented_data(self):
+        datagen = ImageDataGenerator(
+            rotation_range=90,  # randomly rotate images by 10 degrees
+            width_shift_range=0.1,  # randomly shift images horizontally by 10%
+            height_shift_range=0.1,  # randomly shift images vertically by 10%
+            zoom_range=0.1,  # randomly zoom images by up to 10%
+            fill_mode="nearest",  # fill in missing pixels with nearest value
+        )
+
+        X_train = self.train_X.reshape(self.train_X.shape[0], 28, 28, 1)
+        datagen.fit(X_train)
+
+        aug_X_train = datagen.flow(X_train, batch_size=60000, shuffle=False).next()
+        aug_X_train = aug_X_train.reshape(X_train.shape[0], 28, 28)
+
+        self.train_X = np.append(self.train_X, aug_X_train, axis=0)
+        self.train_y = np.append(self.train_y, self.train_y, axis=0)
