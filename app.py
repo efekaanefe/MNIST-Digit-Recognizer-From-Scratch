@@ -43,7 +43,7 @@ class DigitRecognizerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
-            epochs=100, learning_rate=0.5, batch_size=(60000 * 2) // 3, plot_acc=False
+            epochs=1, learning_rate=0.5, batch_size=(60000 * 2) // 3, plot_acc=False
         )
         self.nn.test_accuracy_with_test_data()
 
@@ -73,11 +73,6 @@ class DigitRecognizerGUI:
             for j in range(GRID_SIZE[1]):
                 val = self.matrix[i][j]
                 color = (255 * (1 - val), 255 * (1 - val), 255 * (1 - val))
-
-                # if self.matrix[i][j] == 1:
-                #     color = BLACK
-                # else:
-                #     color = WHITE
                 pygame.draw.rect(
                     self.screen,
                     color,
@@ -100,8 +95,13 @@ class DigitRecognizerGUI:
                 self.matrix[i, j] += factor
                 # keep the pixel value between 0 and 1
                 self.matrix[i, j] = np.clip(self.matrix[i, j], 0, 1)
-        print("drawn")
-        print(self.matrix)
+
+    def erase_on_matrix(self, x, y, radius):
+        h, w = GRID_SIZE
+        for i in range(h):
+            for j in range(w):
+                if (i - y) ** 2 + (j - x) ** 2 <= radius**2:
+                    self.matrix[i, j] = 0
 
     def draw_lines(self):
         # vertical
@@ -148,35 +148,15 @@ class DigitRecognizerGUI:
                 x, y = pygame.mouse.get_pos()
                 col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
                 row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
-
                 self.draw_with_gaussian(row, col)
-                # is_colliding_x = (
-                #     MATRIX_ORIGIN_X < x and x < MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH
-                # )
-                # is_colliding_y = (
-                #     MATRIX_ORIGIN_Y < y and y < MATRIX_ORIGIN_Y + MATRIX_AREA_HEIGHT
-                # )
-                # is_colliding = is_colliding_x and is_colliding_y
-                # if is_colliding:
-                #     col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
-                #     row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
-                #     self.matrix[row][col] = 1
 
             # clear cell
             if pygame.mouse.get_pressed()[2]:
                 # Update matrix when mouse is clicked
                 x, y = pygame.mouse.get_pos()
-                is_colliding_x = (
-                    MATRIX_ORIGIN_X < x and x < MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH
-                )
-                is_colliding_y = (
-                    MATRIX_ORIGIN_Y < y and y < MATRIX_ORIGIN_Y + MATRIX_AREA_HEIGHT
-                )
-                is_colliding = is_colliding_x and is_colliding_y
-                if is_colliding:
-                    col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
-                    row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
-                    self.matrix[row][col] = 0
+                col = (x - MATRIX_ORIGIN_X) // CELL_SIZE
+                row = (y - MATRIX_ORIGIN_Y) // CELL_SIZE
+                self.erase_on_matrix(col, row, 2)
 
     def get_prediction(self):
         input = np.array(self.matrix).flatten()
