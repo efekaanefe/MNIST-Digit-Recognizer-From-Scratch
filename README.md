@@ -16,7 +16,7 @@ Also, by adjusting the flags (print_acc and plot_acc) you can see the training a
 - [ ] Neural network can be converted to convolutional neural network.
 - [ ] Another GUI can be added which gets a random value in the data and shows what the neural network guess is and the actual label.
 - [ ] Other datasets such as ([EMNIST](https://github.com/hosford42/EMNIST), [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist), [
-quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset) ) can be trained.
+quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset), etc.) can be trained.
 
 
 Inspired by:
