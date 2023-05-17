@@ -34,14 +34,13 @@ GRAY = (100, 100, 100)
 BLUE = (0, 0, 220)
 RED = (220, 0, 0)
 GREEN = (0, 220, 0)
-states = ["untrained", "training", "predictions"]
 
 
 class DigitDrawerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
-            epochs=100, learning_rate=0.5, batch_size=(60000 * 1) // 1, plot_acc=False
+            epochs=250, learning_rate=0.5, batch_size=(60000 * 1) // 1, plot_acc=False
         )
         self.nn.test_accuracy_with_test_data()
 
@@ -119,10 +118,20 @@ class DigitDrawerGUI:
                 (MATRIX_ORIGIN_X + MATRIX_AREA_WIDTH, MATRIX_ORIGIN_Y + j * CELL_SIZE),
             )
 
+    def draw_control_text(self):
+        text = "R: reset | LMB : draw | RMB : erase"
+        text = self.font.render(text, True, WHITE, BLACK)
+        textRect = text.get_rect()
+        x = 2 * X_OFFSET + PREDICTON_AREA_WIDTH + MATRIX_AREA_WIDTH // 2
+        y = 2 * Y_OFFSET + MATRIX_AREA_HEIGHT + BUTTON_HEIGHT // 2
+        textRect.center = (x, y)
+        self.screen.blit(text, textRect)
+
     def draw(self):
         self.screen.fill(BLACK)
         self.draw_matrix()
         self.draw_predictions()
+        self.draw_control_text()
         pygame.display.update()
 
     def gameloop(self):
@@ -222,4 +231,4 @@ class DigitDrawerGUI:
             )
 
 
-app = DigitDrawerGUI()()
+app = DigitDrawerGUI()
