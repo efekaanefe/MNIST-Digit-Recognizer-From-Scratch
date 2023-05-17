@@ -42,10 +42,10 @@ class DataInitializerMNIST:
 
     def add_augmented_data(self):
         datagen = ImageDataGenerator(
-            rotation_range=90,  # randomly rotate images by 10 degrees
-            width_shift_range=0.1,  # randomly shift images horizontally by 10%
-            height_shift_range=0.1,  # randomly shift images vertically by 10%
-            zoom_range=0.1,  # randomly zoom images by up to 10%
+            rotation_range=10,  # randomly rotate images by X degrees
+            width_shift_range=0.1,  # randomly shift images horizontally by X%
+            height_shift_range=0.1,  # randomly shift images vertically by X%
+            zoom_range=0.1,  # randomly zoom images by up to X%
             fill_mode="nearest",  # fill in missing pixels with nearest value
         )
 
@@ -55,5 +55,7 @@ class DataInitializerMNIST:
         aug_X_train = datagen.flow(X_train, batch_size=60000, shuffle=False).next()
         aug_X_train = aug_X_train.reshape(X_train.shape[0], 28, 28)
 
-        self.train_X = np.append(self.train_X, aug_X_train, axis=0)
-        self.train_y = np.append(self.train_y, self.train_y, axis=0)
+        # self.train_X = np.append(self.train_X, aug_X_train, axis=0)
+        # self.train_y = np.append(self.train_y, self.train_y, axis=0)
+
+        self.train_X = aug_X_train

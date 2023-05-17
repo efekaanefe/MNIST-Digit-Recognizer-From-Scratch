@@ -43,7 +43,7 @@ class DigitRecognizerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
-            epochs=1, learning_rate=0.5, batch_size=(60000 * 2) // 3, plot_acc=False
+            epochs=100, learning_rate=0.5, batch_size=(60000 * 1) // 1, plot_acc=False
         )
         self.nn.test_accuracy_with_test_data()
 
@@ -65,7 +65,7 @@ class DigitRecognizerGUI:
         self.matrix = np.zeros(GRID_SIZE)
 
     def init_neural_network(self):
-        self.nn = MyNeuralNetwork(DataInitializerMNIST())
+        self.nn = MyNeuralNetwork(DataInitializerMNIST(), hidden=100)
 
     def draw_matrix(self):
         # Draw cells
