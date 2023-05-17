@@ -40,7 +40,7 @@ class DataInitializerMNIST:
             output.append(X[i].flatten())
         return np.array(output).T
 
-    def add_augmented_data(self):
+    def add_augmented_data(self, append_to_original=False):
         datagen = ImageDataGenerator(
             rotation_range=10,  # randomly rotate images by X degrees
             width_shift_range=0.1,  # randomly shift images horizontally by X%
@@ -55,7 +55,8 @@ class DataInitializerMNIST:
         aug_X_train = datagen.flow(X_train, batch_size=60000, shuffle=False).next()
         aug_X_train = aug_X_train.reshape(X_train.shape[0], 28, 28)
 
-        # self.train_X = np.append(self.train_X, aug_X_train, axis=0)
-        # self.train_y = np.append(self.train_y, self.train_y, axis=0)
-
-        self.train_X = aug_X_train
+        if append_to_original:
+            self.train_X = np.append(self.train_X, aug_X_train, axis=0)
+            self.train_y = np.append(self.train_y, self.train_y, axis=0)
+        else:
+            self.train_X = aug_X_train

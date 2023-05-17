@@ -29,8 +29,6 @@ BUTTON_ORIGIN_X, BUTTON_ORIGIN_Y = (
 )
 
 BLACK = (32, 32, 32)
-
-
 WHITE = (200, 200, 200)
 GRAY = (100, 100, 100)
 BLUE = (0, 0, 220)
@@ -39,7 +37,7 @@ GREEN = (0, 220, 0)
 states = ["untrained", "training", "predictions"]
 
 
-class DigitRecognizerGUI:
+class DigitDrawerGUI:
     def __init__(self):
         self.init_neural_network()
         self.nn.gradient_descent(
@@ -224,4 +222,4 @@ class DigitRecognizerGUI:
             )
 
 
-app = DigitRecognizerGUI()
+app = DigitDrawerGUI()()
