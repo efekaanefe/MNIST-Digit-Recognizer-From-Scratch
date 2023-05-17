@@ -19,3 +19,6 @@ Also, by adjusting the flags (print_acc and plot_acc) you can see the training a
 quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset) ) can be trained.
 
 
+Inspired by:
+[Sebastian Lague](https://youtu.be/w8yWXqWQYmU), [Samson Zhang](https://youtu.be/hfMk-kjRv4c)
+
