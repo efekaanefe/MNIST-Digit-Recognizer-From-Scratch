@@ -20,5 +20,5 @@ quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset), etc.
 
 
 Inspired by:
-[Sebastian Lague](https://youtu.be/w8yWXqWQYmU), [Samson Zhang](https://youtu.be/hfMk-kjRv4c)
+[Sebastian Lague](https://youtu.be/hfMk-kjRv4c), [Samson Zhang](https://youtu.be/w8yWXqWQYmU)
 
