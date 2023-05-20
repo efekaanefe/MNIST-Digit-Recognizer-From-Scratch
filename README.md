@@ -18,7 +18,3 @@ Also, by adjusting the flags (print_acc and plot_acc) you can see the training a
 - [ ] Other datasets such as ([EMNIST](https://github.com/hosford42/EMNIST), [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist), [
 quickdraw-dataset](https://github.com/googlecreativelab/quickdraw-dataset), etc.) can be trained.
 
-
-Inspired by:
-[Sebastian Lague](https://youtu.be/hfMk-kjRv4c), [Samson Zhang](https://youtu.be/w8yWXqWQYmU)
-
