@@ -13,6 +13,7 @@ Also, by adjusting the flags (print_acc and plot_acc) you can see the training a
 ## Possible Improvements
 - [ ] Loss while training can be calculated.
 - [ ] Multiple hidden layers can be added. For example, MyNeuralNetwork class takes hidden = (20,20,10) as input and adjusts weights and biases according to.
+- [ ] NN can be visualized to show how the weights and layers changes during gradient descent.
 - [ ] Neural network can be converted to convolutional neural network.
 - [ ] Another GUI can be added which gets a random value in the data and shows what the neural network guess is and the actual label.
 - [ ] Other datasets such as ([EMNIST](https://github.com/hosford42/EMNIST), [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist), [
